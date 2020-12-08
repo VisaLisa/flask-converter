@@ -7,7 +7,9 @@ app = Flask(__name__)
 app.debug = True
 # set a 'SECRET_KEY' to enable the Flask session cookies
 app.config['SECRET_KEY'] = 'St0NKs&M0N13z'
-toolbar = DebugToolbarExtension(app)
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
+debug = DebugToolbarExtension(app)
 
 c = CurrencyRates()
 s = CurrencyCodes()
@@ -19,32 +21,35 @@ def home():
 """Currency Check"""
 @app.route("/currency-check", methods=["POST"])
 def currency_check():
-    c_from = request.form.get['c-from'].upper()
-    c_to = request.form.get['c-to'].upper()
-    amount = request.form.get['amount']
-    print (amount)
+    c_from = request.form.get('c-from').upper()
+    c_to = request.form.get('c-to').upper()
+    amount = request.form.get('amount')
+
+    # input is invalid    
+    try:
+        c.get_rates(c_from)
+        c_from = c_from
+    except:
+        flash('The currency you were converting from was invalid')
+        c_from = False 
+    try:
+        c.get_rates(c_to)
+        c_to = c_to
+    except:
+        flash('The currency you were converting to was invalid')
+        c_to = False
+
     
-    # try:
-    #     c.get_rates(c_from)
-    #     c_from = c_from
-    # except:
-    #     flash('The currency you were converting from was invalid')
-    #     c_from = False 
-    # try:
-    #     c.get_rates(c_to)
-    #     c_to = c_to
-    # except:
-    #     flash('The currency you were converting to was invalid')
-    #     c_to = False
-    # if c_from and c_to and amount.replace('.', '', 1).isdigit():
-    #     amount = str(round(c.convert(c_from, c_to, float(amount)),2)) 
-    #     symbol = s.get_symbol(c_to)
-    # elif not amount.isnumeric():
-    #     flash('The amount you put in was invalid')
-    #     symbol = False
-    #     amount=False
-    # else:
-    #     symbol = False
-    #     amount = False
+    if c_from and c_to and amount.replace('.', '', 1).isdigit():
+        amount = str(round(c.convert(c_from, c_to, float(amount)),2)) 
+        symbol = s.get_symbol(c_to)
+
+    elif not amount.isnumeric():
+        flash('The amount you put in was invalid')
+        symbol = False
+        amount= False
+    else:
+        symbol = False
+        amount = False
 
     return render_template('base.html', amount=amount, c_from=c_from, c_to=c_to)

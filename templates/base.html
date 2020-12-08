@@ -12,9 +12,6 @@
             <h3>{{msg}}</h3>
         </div>
     {% endfor %}
-    <div class="alert alert-danger d-none" role="alert">
-    Not a valid amount.
-    </div>
 
     <form action="/currency-check" method="POST">
     Converting from <input type="text" maxlength="3" id="convert-from" name="c-from"> <br>
@@ -25,7 +22,7 @@
 
     <br><br>
 
-    <p>Converted from {{ c_from }} to {{ c_to }}</p>  
-    <p>Amount is {{amount}}</p>
+    <p>Converted from {{ c-from }} to {{ c-to }}</p>  
+    <p>Amount is {{ amount }}</p>
 </body>
 </html>

@@ -25,7 +25,7 @@ def currency_check():
     c_to = request.form.get('c-to').upper()
     amount = request.form.get('amount')
 
-    # input is invalid    
+    """check if input is invalid    """
     try:
         c.get_rates(c_from)
         c_from = c_from
@@ -38,18 +38,22 @@ def currency_check():
     except:
         flash('The currency you were converting to was invalid')
         c_to = False
+    try:
+        float(amount)
+    except:
+        flash('The amount you put in was invalid')
+        amount = False
+
 
     
     if c_from and c_to and amount.replace('.', '', 1).isdigit():
-        amount = str(round(c.convert(c_from, c_to, float(amount)),2)) 
-        symbol = s.get_symbol(c_to)
-
-    elif not amount.isnumeric():
-        flash('The amount you put in was invalid')
-        symbol = False
-        amount= False
+        converted_amount = str(round(c.convert(c_from, c_to, float(amount)),2)) 
+        to_symbol = s.get_symbol(c_to)
+        from_symbol = s.get_symbol(c_from)
     else:
-        symbol = False
-        amount = False
+        converted_amount = False
+        to_symbol = False
+        from_symbol = False
+        
 
-    return render_template('base.html', amount=amount, c_from=c_from, c_to=c_to)
+    return render_template('base.html', converted_amount=converted_amount, amount=amount, from_symbol=from_symbol, to_symbol=to_symbol, c_from=c_from, c_to=c_to)

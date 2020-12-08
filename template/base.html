@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    {% for msg in get_flashed_messages() %}
+        <div class="alert alert-danger" role="alert">
+            <h3>{{msg}}</h3>
+        </div>
+    {% endfor %}
+    <div class="alert alert-danger d-none" role="alert">
+    Not a valid amount.
+    </div>
+
+    <form action="/currency-check" method="POST">
+    Converting from <input type="text" maxlength="3" id="convert-from" name="c-from"> <br>
+    Converting to <input type="text" maxlength="3" id="convert-to" name="c-to"> <br>
+    Amount: <input type="text" id="amount" name="amount"> <br>
+    <button>Covert</button>
+    </form>
+
+    <br><br>
+
+    <p>Converted from {{ c_from }} to {{ c_to }}</p>  
+    <p>Amount is {{amount}}</p>
+</body>
+</html>

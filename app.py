@@ -44,7 +44,7 @@ def currency_check():
         flash('The amount you put in was invalid')
         amount = False
 
-
+"""Convert and get currency symbols"""
     
     if c_from and c_to and amount.replace('.', '', 1).isdigit():
         converted_amount = str(round(c.convert(c_from, c_to, float(amount)),2)) 
